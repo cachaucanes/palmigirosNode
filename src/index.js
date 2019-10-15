@@ -8,6 +8,7 @@ import ciudadesRoutes from './routes/ciudades'
 import clientesRoutes from './routes/clientes'
 import girosRoutes from './routes/giros'
 import perfilesRoutes from './routes/perfiles'
+import usuariosRoutes from './routes/usuarios'
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/api/ciudades", ciudadesRoutes)
 app.use("/api/clientes", clientesRoutes)
 app.use("/api/giros", girosRoutes)
 app.use("/api/perfiles", perfilesRoutes)
+app.use("/api/usuarios", usuariosRoutes)
 
 //public
 app.use(express.static(path.join(__dirname, 'public')))
