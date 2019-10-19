@@ -2,8 +2,7 @@ import Ciudades from '../models/ciudades'
 import Departamentos from '../models/departamentos'
 
 export async function getCiudades(req, res) {
-  try {
-    console.log('Controller')
+  try {    
     const ciudades = await Ciudades.findAll({
       attributes: {
         exclude: ['idDepartamento']
