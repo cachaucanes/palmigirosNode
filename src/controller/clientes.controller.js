@@ -44,7 +44,7 @@ export async function createCliente(req, res) {
     }, {
       fields: ['numeroDocumento', 'nombres', 'apellidos', 'telefono', 'idCiudad']
     })
-    res.json({ message: 'Cliente Creado' })
+    res.json({ message: 'Cliente Creado'})
   } catch (error) {
     res.json(error)
   }
@@ -66,9 +66,13 @@ export async function updateCliente(req, res) {
   try {
     const { id } = req.params
     const { numeroDocumento, nombres, apellidos, telefono, idCiudad } = req.body
-    await Clientes.findOne({
+    const searchCliente =  await Clientes.findOne({
       where: { id }
     })
+    if(!searchCliente){
+      res.status(404).json({message: 'Not Found'})
+      return 0
+    }
     const countCiudadesRow = await Clientes.update({
       numeroDocumento,
       nombres,
