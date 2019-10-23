@@ -16,6 +16,8 @@ const Permisos = sequelize.define('permisos', {
     type: Sequelize.STRING,
     allowNull: false
   }
+},{
+  timestamps: false
 })
 
 export default Permisos
