@@ -26,6 +26,9 @@ app.use((req, res, next) => {
 })
 
 //Routes
+/* app.use("/", (req, res) => {
+  res.send("<h1 style='font-size: 40px;text-align:center;margin-top: 7em'>HELLO WORLD!!</h1>")
+}) */
 app.use("/api/departamentos", departamentosRoutes)
 app.use("/api/ciudades", ciudadesRoutes)
 app.use("/api/clientes", clientesRoutes)

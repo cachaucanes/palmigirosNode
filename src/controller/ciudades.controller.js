@@ -46,7 +46,8 @@ export async function createCiudades(req, res) {
       ciudad,
       idDepartamento
     }, {
-      fields: ['ciudad', 'idDepartamento']
+      fields: ['ciudad', 'idDepartamento'] //Si se establece, solo se guardarán las columnas que coincidan con las de los campos.
+      //Una matriz opcional de cadenas que representa las columnas de la base de datos. Si se proporcionan campos, solo esas columnas serán validadas y guardadas.
     })
     res.json({ message: 'Ciudad Creada' })
   } catch (error) {

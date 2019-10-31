@@ -1,8 +1,14 @@
 import Permisos from '../models/permisos'
+import Perfiles from '../models/perfiles'
 
 export async function getPermisos(req, res) {
   try {
-    const permisos = await Permisos.findAll()
+    const permisos = await Permisos.findAll({
+      /* include: {model: Perfiles, as: 'idPerfil'} */
+      /* include: [{
+        model: Perfiles, as: 'idPerfil'        
+      }] */
+    })
     res.json(permisos)
   } catch (error) {
     res.json(error)
