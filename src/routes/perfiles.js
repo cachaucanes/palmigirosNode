@@ -6,6 +6,6 @@ router.get('/', getPerfiles)
 router.get('/:idPerfiles', getOnePerfil)
 router.post('/', createPerfil)
 router.delete('/:idPerfiles', deletePerfil)
-router.put('/:id', updatePerfil)
+router.put('/:idPerfil', updatePerfil)
 
 export default router

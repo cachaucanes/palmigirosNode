@@ -18,10 +18,14 @@ export async function getOnePerfil(req, res) {
   try {
     const { idPerfiles } = req.params
     const perfil = await Perfiles.findOne({
-      attributes: ['idPerfiles', 'descripcion'],
-      where: { idPerfiles },
-
+      attributes: ['id', 'descripcion'],
+      where: { id: idPerfiles },
+      include: [{model: Permisos}]
     })
+    if(!perfil){
+      res.status(404).json({message: 'Not Found'})
+      return 0
+    }
     res.json(perfil)
   } catch (error) {
     res.json(error)
@@ -30,12 +34,12 @@ export async function getOnePerfil(req, res) {
 
 export async function createPerfil(req, res) {
   try {
-    const { idPerfiles, descripcion } = req.body
+    const { id, descripcion } = req.body
     const perfil = await Perfiles.create({
-      idPerfiles,
+      id,
       descripcion
     }, {
-      fields: ['idPerfiles', 'descripcion']
+      fields: ['id', 'descripcion']
     })
     res.json({ message: 'Perfil creado', created: perfil })
   } catch (error) {
@@ -47,8 +51,12 @@ export async function deletePerfil(req, res) {
   try {
     const { idPerfiles } = req.params
     const deleteRows = await Perfiles.destroy({
-      where: { idPerfiles }
+      where: { id: idPerfiles }
     })
+    if(!deleteRows){
+      res.status(404).json({message: 'Not Found'})
+      return 0
+    }
     res.json({ message: 'Perfil deleted', rows: deleteRows })
   } catch (error) {
     res.json(error)
@@ -58,11 +66,11 @@ export async function deletePerfil(req, res) {
 export async function updatePerfil(req, res) {
   try {
 
-    const { id } = req.params
-    const { idPerfiles, descripcion } = req.body
+    const { idPerfil } = req.params
+    const { id, descripcion } = req.body
 
     const perfilSearch = await Perfiles.findOne({
-      where: { idPerfiles: id }
+      where: { id: idPerfil }
     })
 
     if (!perfilSearch) {      
@@ -70,11 +78,15 @@ export async function updatePerfil(req, res) {
       return 0
     }
     const perfil = await Perfiles.update({
-      idPerfiles,
+      id,
       descripcion
     }, {
-      where: { idPerfiles: id }
+      where: { id: idPerfil }
     })
+    if(perfil < 1){
+      res.status(404).json({message: 'Not Update'})
+      return 0
+    }
     res.json({ message: 'Perfil updated', rowUpdate: perfil })
   } catch (error) {
     res.json(error)
