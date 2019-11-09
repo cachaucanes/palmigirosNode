@@ -6,7 +6,7 @@ import { getPermisos, getOnePermisos, createPermisos, deletePermisos, updatePerm
 router.get('/', getPermisos)
 router.get('/:id', getOnePermisos)
 router.post('/', createPermisos)
-router.delete('/:id', deletePermisos)
-router.put('/:id', updatePermisos)
+router.delete('/:idPermisos', deletePermisos)
+router.put('/:idPermisos', updatePermisos)
 
 export default router

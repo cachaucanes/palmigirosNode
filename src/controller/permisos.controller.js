@@ -19,7 +19,7 @@ export async function getOnePermisos(req, res) {
   try {
     const { id } = req.params
     const permisos = await Permisos.findOne({
-      where: { idPermisos: id }
+      where: { id }
     })
     if (permisos == null) {
       res.status(404).json({ message: 'Not Found' })
@@ -33,13 +33,13 @@ export async function getOnePermisos(req, res) {
 
 export async function createPermisos(req, res) {
   try {
-    const { idPermisos, descripcion, tabla } = req.body
+    const { id, descripcion, tabla } = req.body
     const permisos = await Permisos.create({
-      idPermisos,
+      id,
       descripcion,
       tabla
     }, {
-      fields: ["idPermisos", "descripcion", "tabla"]
+      fields: ["id", "descripcion", "tabla"]
     })
     res.json({ message: 'Created Perfil', permisos })
   } catch (error) {
@@ -49,9 +49,9 @@ export async function createPermisos(req, res) {
 
 export async function deletePermisos(req, res) {
   try {
-    const { id } = req.params
+    const { idPermisos } = req.params
     const rowPermisos = await Permisos.destroy({
-      where: { idPermisos: id }
+      where: { id: idPermisos}
     })
     if (rowPermisos < 1) {
       res.status(404).json({ message: 'Not Found' })
@@ -65,21 +65,21 @@ export async function deletePermisos(req, res) {
 
 export async function updatePermisos(req, res) {
   try {
-    const { id } = req.params
-    const { idPermisos, descripcion, tabla } = req.body
+    const { idPermisos } = req.params
+    const { id, descripcion, tabla } = req.body
     const searchPermiso = await Permisos.findOne({
-      where: { idPermisos: id }
+      where: { id: idPermisos }
     })
     if (!searchPermiso) {
       res.status(404).json({ message: 'Not Found' })
       return 0
     }
     const updatePermiso = await Permisos.update({
-      idPermisos,
+      id,
       descripcion,
       tabla
     }, {
-      where: { idPermisos: id }
+      where: { id: idPermisos }
     })
     res.json({ message: 'Updated Permiso', updatePermiso })
   } catch (error) {
