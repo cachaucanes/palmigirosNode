@@ -1,6 +1,7 @@
 import express, { json } from 'express' //npm i @babel/node -D 
 import morgan from 'morgan'
 import path from 'path'
+import cors from 'cors' //Comunicacion entre servidores
 
 //import Routes
 import departamentosRoutes from './routes/departamentos'
@@ -13,9 +14,10 @@ import permisosRoutes from './routes/permisos'
 
 const app = express();
 
-app.set('port', process.env.PORT || 3000)
+app.set('port', process.env.PORT || 4000)
 
 //midlleware
+app.use(cors())
 app.use(morgan('dev'));
 app.use(json());
 
