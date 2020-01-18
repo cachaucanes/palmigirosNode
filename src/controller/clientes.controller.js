@@ -57,8 +57,8 @@ export async function deleteCliente(req, res) {
       where: { id }
     })
     res.json({ message: 'Cliente Eliminado', count: clienteCountRow })
-  } catch (error) {
-    res.json(error)
+  } catch (error) {    
+    res.json({message: 'Error', error})
   }
 }
 

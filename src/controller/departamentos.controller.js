@@ -60,6 +60,24 @@ export async function deleteDepartamento(req, res) {
   })
 }
 
+/* export async function updateDepartamento(req, res){
+  try {
+    const {id} = req.params
+  const {departamento, created_at } = req.body
+
+  const result = await Departamento.update({
+    departamento,
+    created_at
+  }, {
+    where: { id }
+  })
+  res.json(result)    
+  } catch (error) {
+    res.json(error)
+  }
+
+} */
+
 export async function updateDepartamento(req, res) {
   const { id } = req.params
   const { departamento, created_at } = req.body
@@ -77,12 +95,13 @@ export async function updateDepartamento(req, res) {
         departamento,
         created_at
       })
+
     })
+    res.json( {message: 'Department Update',departamentos})
+  } else {
+    res.json({ message: 'sin data' })
   }
 
-  res.json({
-    message: 'Departament update',
-    data: departamentos
-  })
+
 }
 
