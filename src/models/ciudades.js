@@ -8,7 +8,8 @@ import Giros from './giros';
 const Ciudades = sequelize.define('ciudades', {
   id: {
     type: Sequelize.INTEGER,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true
   },
   ciudad: {
     type: Sequelize.TEXT
@@ -18,7 +19,7 @@ const Ciudades = sequelize.define('ciudades', {
     references: {
       model: Departamentos,
       key: 'id',
-      as: 'idDepartamento'
+      /* as: 'idDepartamento' */
     }  
   }
 },{

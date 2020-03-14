@@ -15,10 +15,13 @@ export async function getDepartamentos(req, res) {
 
 export async function createDepartamento(req, res) {
   const { departamento, created_at } = req.body
+  const dates = new Date()
+  console.log(dates);
+  
   try {
     let newDepartamento = await Departamento.create({
       departamento,
-      created_at
+      created_at: dates
     }, {
       fields: ['departamento', 'created_at']
     });
@@ -28,12 +31,17 @@ export async function createDepartamento(req, res) {
         message: 'Departamento creado',
         data: newDepartamento
       })
+      console.log(newDepartamento);
+      
     }
   } catch (error) {
-    res.status(500).json({
-      message: 'Somethin goes wrong',
+    console.log("este envio", error.message);
+    
+    /* res.status(500).json({
+      message: error,
       data: {}
-    })
+    })   */ 
+    res.status(505).json(error)
   }
 }
 

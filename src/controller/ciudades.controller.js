@@ -2,7 +2,7 @@ import Ciudades from '../models/ciudades'
 import Departamentos from '../models/departamentos'
 
 export async function getCiudades(req, res) {
-  try {    
+  try {
     const ciudades = await Ciudades.findAll({
       attributes: {
         exclude: ['idDepartamento']
@@ -42,6 +42,7 @@ export async function getOneCiudades(req, res) {
 export async function createCiudades(req, res) {
   try {
     const { ciudad, idDepartamento } = req.body
+
     const newCiudad = await Ciudades.create({
       ciudad,
       idDepartamento
@@ -49,7 +50,17 @@ export async function createCiudades(req, res) {
       fields: ['ciudad', 'idDepartamento'] //Si se establece, solo se guardarán las columnas que coincidan con las de los campos.
       //Una matriz opcional de cadenas que representa las columnas de la base de datos. Si se proporcionan campos, solo esas columnas serán validadas y guardadas.
     })
-    res.json({ message: 'Ciudad Creada' })
+  //Query para retornar ciudad creada con atrubitos de llaves foraneas
+    const getCityCreate = await Ciudades.findOne({
+      where: {
+        id: newCiudad.dataValues.id
+      },
+      attributes: {
+        exclude: ['idDepartamento']
+      },
+      include: [{ model: Departamentos, as: 'idDepartamentos' }]
+    })        
+    res.json({ message: 'Ciudad Creada', data: getCityCreate })
   } catch (error) {
     res.json(error)
   }

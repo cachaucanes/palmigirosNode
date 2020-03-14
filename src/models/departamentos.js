@@ -10,7 +10,11 @@ const Departamentos = sequelize.define('departamentos', {
     autoIncrement: true,
   },  
   departamento:{
-    type: Sequelize.TEXT
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   created_at: {
     type: Sequelize.DATE
