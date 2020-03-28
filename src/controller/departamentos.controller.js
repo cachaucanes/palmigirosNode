@@ -16,8 +16,6 @@ export async function getDepartamentos(req, res) {
 export async function createDepartamento(req, res) {
   const { departamento, created_at } = req.body
   const dates = new Date()
-  console.log(dates);
-  
   try {
     let newDepartamento = await Departamento.create({
       departamento,
@@ -31,17 +29,12 @@ export async function createDepartamento(req, res) {
         message: 'Departamento creado',
         data: newDepartamento
       })
-      console.log(newDepartamento);
-      
     }
   } catch (error) {
-    console.log("este envio", error.message);
-    
-    /* res.status(500).json({
-      message: error,
-      data: {}
-    })   */ 
-    res.status(505).json(error)
+    /* console.log("Mensaje de error", error.message);
+    console.log("Mensaje de error Completo", error.errors[0].message); */
+    /* res.status(500).json({error, message: error.errors[1].message}) */
+    res.status(500).json({ error, message: error.message })
   }
 }
 
@@ -57,15 +50,19 @@ export async function getOneDepartamento(req, res) {
 
 export async function deleteDepartamento(req, res) {
   const { id } = req.params
-  const deleteRowCount = await Departamento.destroy({
-    where: {
-      id
-    }
-  })
-  res.json({
-    message: 'Delete Departament',
-    count: deleteRowCount
-  })
+  try {
+    const deleteRowCount = await Departamento.destroy({
+      where: {
+        id
+      }
+    })
+    res.json({
+      message: 'Department successfully deleted',
+      count: deleteRowCount
+    })
+  } catch (error) {
+    res.status(500).json({error, message: error});    
+  }
 }
 
 /* export async function updateDepartamento(req, res){
@@ -87,29 +84,56 @@ export async function deleteDepartamento(req, res) {
 } */
 
 export async function updateDepartamento(req, res) {
-  const { id } = req.params
-  const { departamento, created_at } = req.body
 
-  const departamentos = await Departamento.findAll({
-    attributes: ['id', 'departamento', 'created_at'], //los datos que quiero obtener de esta consulta
-    where: {
-      id
-    }
-  })
+  try {
 
-  if (departamentos.length > 0) {
-    departamentos.forEach(async departamentos => {
-      await departamentos.update({
-        departamento,
-        created_at
-      })
+    const { id } = req.params
+    const { departamento, created_at } = req.body
 
+    const departamentos = await Departamento.findAll({
+      attributes: ['id', 'departamento', 'created_at'], //los datos que quiero obtener de esta consulta
+      where: {
+        id
+      }
     })
-    res.json( {message: 'Department Update',departamentos})
-  } else {
-    res.json({ message: 'sin data' })
+
+    const department = await Departamento.update({
+      departamento,
+      created_at
+    },
+    {
+      where: { id }
+    })
+
+    /* if (departamentos.length > 0) {
+      departamentos.forEach(async departamentos => {
+        await departamentos.update({
+          departamento,
+          created_at
+        })
+  
+      })
+      res.json( {message: 'Department Update',departamentos})
+    } else {
+      res.json({ message: 'Sin cambios' })
+    }
+   */
+    if (department > 0) {
+      /* Back to updated city */
+      const updateDepartment = await Departamento.findOne({ //Diferente metodo de busca
+        //attributes: ['id', 'ciudad', 'idDepartamento'], //los datos que quiero obtener de esta consulta
+        where: {
+          id
+        }
+      })
+      res.json({ message: 'Department updated', data: updateDepartment })
+    }
+    else {
+      res.json({ message: 'Sin Cambios', data: department })
+    }
+
+  } catch (error) {
+    res.json(error)
   }
-
-
 }
 

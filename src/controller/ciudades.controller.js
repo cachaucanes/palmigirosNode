@@ -50,7 +50,7 @@ export async function createCiudades(req, res) {
       fields: ['ciudad', 'idDepartamento'] //Si se establece, solo se guardarán las columnas que coincidan con las de los campos.
       //Una matriz opcional de cadenas que representa las columnas de la base de datos. Si se proporcionan campos, solo esas columnas serán validadas y guardadas.
     })
-  //Query para retornar ciudad creada con atrubitos de llaves foraneas
+    //Query para retornar ciudad creada con atrubitos de llaves foraneas
     const getCityCreate = await Ciudades.findOne({
       where: {
         id: newCiudad.dataValues.id
@@ -59,7 +59,7 @@ export async function createCiudades(req, res) {
         exclude: ['idDepartamento']
       },
       include: [{ model: Departamentos, as: 'idDepartamentos' }]
-    })        
+    })
     res.json({ message: 'Ciudad Creada', data: getCityCreate })
   } catch (error) {
     res.json(error)
@@ -75,11 +75,11 @@ export async function deleteCiudad(req, res) {
       }
     })
     res.json({
-      message: 'Ciudad Eliminada',
+      message: 'Deleted city with success',
       counts: deleteRowCount
     })
   } catch (error) {
-    res.json(error)
+    res.status(500).json({error, message: error})
   }
 }
 
@@ -101,7 +101,24 @@ export async function updateCiudad(req, res) {
       {
         where: { id }
       })
-    res.json({ message: 'Ciudad Updated', data: ciudadUpdated })
+
+    if (ciudadUpdated > 0) {
+      /* Back to updated city */
+      const updatedCity = await Ciudades.findOne({ //Diferente metodo de busca
+        //attributes: ['id', 'ciudad', 'idDepartamento'], //los datos que quiero obtener de esta consulta
+        where: {
+          id
+        },
+        attributes: {
+          exclude: ['idDepartamento']
+        },
+        include: [{ model: Departamentos, as: 'idDepartamentos' }]
+      })
+      res.json({ message: 'City updated', data: updatedCity })
+    }
+    else {
+      res.json({ message: 'Sin Cambios', data: ciudadUpdated })
+    }
   } catch (error) {
     res.json(error)
   }

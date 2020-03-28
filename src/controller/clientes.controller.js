@@ -44,9 +44,19 @@ export async function createCliente(req, res) {
     }, {
       fields: ['numeroDocumento', 'nombres', 'apellidos', 'telefono', 'idCiudad']
     })
-    res.json({ message: 'Cliente Creado'})
+
+    //fetch para enviar datos completos del cliente creado
+    const cliente = await Clientes.findOne({
+      where: { id: clienteCreate.id },
+      attributes: {
+        exclude: ['idCiudad']
+      },
+      include: [{ attributes: { exclude: ['idDepartamento'] }, model: Ciudades, as: 'idCiudades', include: [{ model: Departamentos, as: 'idDepartamentos' }] }]
+    })
+
+    res.json({ message: 'Save client', cliente })
   } catch (error) {
-    res.json(error)
+    res.status(500).json({error, message: error.message})
   }
 }
 
@@ -57,8 +67,8 @@ export async function deleteCliente(req, res) {
       where: { id }
     })
     res.json({ message: 'Cliente Eliminado', count: clienteCountRow })
-  } catch (error) {    
-    res.json({message: 'Error', error})
+  } catch (error) {
+    res.status(500).json({ message: 'Error', error })
   }
 }
 
@@ -66,11 +76,11 @@ export async function updateCliente(req, res) {
   try {
     const { id } = req.params
     const { numeroDocumento, nombres, apellidos, telefono, idCiudad } = req.body
-    const searchCliente =  await Clientes.findOne({
+    const searchCliente = await Clientes.findOne({
       where: { id }
     })
-    if(!searchCliente){
-      res.status(404).json({message: 'Not Found'})
+    if (!searchCliente) {
+      res.status(404).json({ message: 'Not Found' })
       return 0
     }
     const countCiudadesRow = await Clientes.update({
@@ -82,9 +92,22 @@ export async function updateCliente(req, res) {
     }, {
       where: { id }
     })
-    res.json({ message: 'Cliente Update', data: countCiudadesRow })
+
+    if (countCiudadesRow > 0) {
+      const clientes = await Clientes.findOne({
+        where: { id },
+        attributes: {
+          exclude: ['idCiudad']
+        },
+        include: [{ attributes: { exclude: ['idDepartamento'] }, model: Ciudades, as: 'idCiudades', include: [{ model: Departamentos, as: 'idDepartamentos' }] }]
+      })
+      res.json({ message: 'Cliente Update', clientes })
+    }else{
+      res.json({ message: 'Sin Cambios', clientes: countCiudadesRow })
+    }
+
   } catch (error) {
-    res.json(error)
+    res.status(500).json({error, message: error.message})
   }
 }
 

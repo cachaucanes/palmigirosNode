@@ -13,24 +13,45 @@ const Clientes = sequelize.define('clientes', {
   numeroDocumento: {
     type: Sequelize.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Please enter your number document'
+      }
+    }
   },
   nombres: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Please enter your names'
+      }
+    }
   },
   apellidos: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Please enter your last names'
+      }
+    }
   },
   telefono: {
     type: Sequelize.STRING,
   },
   idCiudad: {
     type: Sequelize.INTEGER,
+    allowNull: false,
     references: {
       model: Ciudades,
       key: 'id',
       as: 'idCiudad'
+    },
+    validate: {
+      notEmpty: {
+        msg: 'Please select your city'
+      }
     }
   }
 }, {
