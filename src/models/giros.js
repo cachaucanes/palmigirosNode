@@ -10,7 +10,7 @@ const Giros = sequelize.define('giros',{
     autoIncrement: true
   },
   fecha: {
-    type: Sequelize.DATE,    
+    type: Sequelize.DATE,
   },
   estado: {
     type: Sequelize.BOOLEAN    

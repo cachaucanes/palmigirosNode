@@ -7,9 +7,8 @@ export async function getPerfiles(req, res) {
       /* attributes: ['idPerfiles', 'descripcion'], */
       include: [{ model: Permisos }]
     })
-    res.json(perfiles)
+    res.json({ perfiles, message: 'Search success' })
   } catch (error) {
-    console.log(error)
     res.json(error)
   }
 }
@@ -20,15 +19,15 @@ export async function getOnePerfil(req, res) {
     const perfil = await Perfiles.findOne({
       attributes: ['id', 'descripcion'],
       where: { id: idPerfiles },
-      include: [{ model: Permisos }]
+      /* include: [{ model: Permisos }] */
     })
     if (!perfil) {
       res.status(404).json({ message: 'Not Found' })
       return 0
     }
-    res.json(perfil)
+    res.json({ perfil, message: 'Success search Profile' })
   } catch (error) {
-    res.json(error)
+    res.status(500).json(error)
   }
 }
 
@@ -41,7 +40,7 @@ export async function createPerfil(req, res) {
     }, {
       fields: ['id', 'descripcion']
     })
-    res.json({ message: 'Perfil creado', created: perfil })
+    res.json({ message: 'Perfil creado', perfil })
   } catch (error) {
     res.json(error)
   }
@@ -59,7 +58,7 @@ export async function deletePerfil(req, res) {
     }
     res.json({ message: 'Perfil deleted', rows: deleteRows })
   } catch (error) {
-    res.json(error)
+    res.status(500).json(error)
   }
 }
 
@@ -67,13 +66,12 @@ export async function updatePerfil(req, res) {
   try {
     const { idPerfil } = req.params
     const { id, descripcion } = req.body
-
     const perfilSearch = await Perfiles.findOne({
       where: { id: idPerfil }
     })
 
     if (!perfilSearch) {
-      res.status(404).json({ message: 'Profile not found' })
+      res.status(404).json({ message: 'Profile exist' })
       return 0
     }
     const perfil = await Perfiles.update({
@@ -82,19 +80,26 @@ export async function updatePerfil(req, res) {
     }, {
       where: { id: idPerfil }
     })
-    if (perfil < 1) {
-      res.status(404).json({ message: 'Not Update' })
-      return 0
+    console.log(perfil);
+
+    if (perfil > 0) {
+      res.json({ message: 'Perfil updated' })
     }
-    res.json({ message: 'Perfil updated', rowUpdate: perfil })
+    else {
+      res.status(404).json({ message: 'Profile Not Update' })
+    }
+
   } catch (error) {
-    res.json(error)
+    res.status(500).json({ error, message: error.message })
   }
 }
+
+
+
 //PerfilesHasPermisos (BelongsToMany)
 export async function postPermisos(req, res) {
   try {
-    const { idPerfil, idPermiso } = req.body
+    const { idPerfil, idPermiso } = req.body        
     const perfil = await Perfiles.findOne({
       where: { id: idPerfil }
     })
@@ -102,18 +107,16 @@ export async function postPermisos(req, res) {
       res.json({ message: 'Perfil not found' })
       return 0
     }
-
     const permiso = await Permisos.findOne({
       where: { id: idPermiso }
     })
-    if (!permiso) {
+    if (permiso) {
+      const permisosAdd = await perfil.addPermisos(permiso)
+      res.json({ message: "Permisos agregados al perfil", permisosAdd })
+    } else {
       res.json({ message: 'Permiso not found' })
-      return 0
     }
 
-    const permisosAdd = await perfil.addPermisos(permiso)
-
-    res.json({ message: "Permisos agregados al perfil", permisosAdd })
   } catch (error) {
     res.json(error)
   }
@@ -129,12 +132,14 @@ export async function deletePermisos(req, res) {
     const perfil = await Perfiles.findOne({
       where: { id: idPerfil }
     })
-    if (!perfil) {
-      res.json({ message: 'Perfil not found' })
-      return 0
+
+    if (perfil) {
+      await perfil.removePermisos(idPermiso)
+      res.json({ message: 'Permiso removido' })
+    } else {
+      res.status(404).json({ message: 'Perfil not found' })
     }
-    const permisoRemoved = await perfil.removePermisos(idPermiso)
-    res.json({ message: 'Permiso removido', permisoRemoved })
+
   } catch (error) {
     res.json(error)
   }

@@ -25,7 +25,32 @@ export async function getOneCliente(req, res) {
       },
       include: [{ attributes: { exclude: ['idDepartamento'] }, model: Ciudades, as: 'idCiudades', include: [{ model: Departamentos, as: 'idDepartamentos' }] }]
     })
-    res.json(clientes)
+    if(clientes){      
+      res.json({clientes, message: 'Success'})    
+    }
+    else{
+      res.status(404).json({clientes: {}, message: "User Not found"})      
+    }        
+  } catch (error) {    
+    res.json(error)
+  }
+}
+export async function getClienteFindByCC(req, res) {
+  try {
+    const { numeroDocumento } = req.params
+    const clientes = await Clientes.findOne({
+      where: { numeroDocumento },
+      attributes: {
+        exclude: ['idCiudad']
+      },
+      include: [{ attributes: { exclude: ['idDepartamento'] }, model: Ciudades, as: 'idCiudades', include: [{ model: Departamentos, as: 'idDepartamentos' }] }]
+    })
+    if(clientes){      
+      res.json({clientes, message: 'Search Success'})    
+    }
+    else{
+      res.status(404).json({clientes: {}, message: "Client Not found"})      
+    }        
   } catch (error) {
     console.log(error)
     res.json(error)

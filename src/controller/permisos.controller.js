@@ -9,41 +9,42 @@ export async function getPermisos(req, res) {
         model: Perfiles, as: 'idPerfil'        
       }] */
     })
-    res.json(permisos)
+    res.json({ permisos, message: 'Search Permisos success' })
   } catch (error) {
-    res.json(error)
+    res.status(500).json({ error, message: error.message })
   }
 }
 
 export async function getOnePermisos(req, res) {
   try {
     const { id } = req.params
-    const permisos = await Permisos.findOne({
+    const permiso = await Permisos.findOne({
       where: { id }
     })
-    if (permisos == null) {
+
+    if (!permiso) {
       res.status(404).json({ message: 'Not Found' })
       return 0
     }
-    res.json(permisos)
+    res.json({ permiso, message: 'Search Permiso Success' })
   } catch (error) {
-    res.json(error)
+    res.status(500).json({ error, message: error.message })
   }
 }
 
 export async function createPermisos(req, res) {
   try {
     const { id, descripcion, tabla } = req.body
-    const permisos = await Permisos.create({
+    const permiso = await Permisos.create({
       id,
       descripcion,
       tabla
     }, {
       fields: ["id", "descripcion", "tabla"]
     })
-    res.json({ message: 'Created Perfil', permisos })
+    res.json({ message: 'Created Perfil', permiso })
   } catch (error) {
-    res.json(error)
+    res.status(500).json(error)
   }
 }
 
@@ -51,7 +52,7 @@ export async function deletePermisos(req, res) {
   try {
     const { idPermisos } = req.params
     const rowPermisos = await Permisos.destroy({
-      where: { id: idPermisos}
+      where: { id: idPermisos }
     })
     if (rowPermisos < 1) {
       res.status(404).json({ message: 'Not Found' })
@@ -80,9 +81,9 @@ export async function updatePermisos(req, res) {
       tabla
     }, {
       where: { id: idPermisos }
-    })
-    res.json({ message: 'Updated Permiso', updatePermiso })
+    })    
+    res.json({ message: 'Updated Permiso'})        
   } catch (error) {
-    res.json(error)
+    res.status(500).json({error, message: error.message})
   }
 }

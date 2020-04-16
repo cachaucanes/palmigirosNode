@@ -5,9 +5,9 @@ const router = Router()
 router.get('/', getPerfiles)
 router.get('/:idPerfiles', getOnePerfil)
 router.post('/', createPerfil)
-router.post('/add', postPermisos)
-
 router.delete('/:idPerfiles', deletePerfil)
+
+router.post('/add', postPermisos)
 router.delete('/delete/:idPerfil/:idPermiso', deletePermisos)
 router.put('/:idPerfil', updatePerfil)
 
