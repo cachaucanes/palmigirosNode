@@ -24,7 +24,7 @@ export async function getCiudades(req, res) {
 export async function getOneCiudades(req, res) {
   try {
     const { id } = req.params
-    const ciudades = await Ciudades.findOne({
+    const city = await Ciudades.findOne({
       where: {
         id
       },
@@ -32,10 +32,14 @@ export async function getOneCiudades(req, res) {
         exclude: ['idDepartamento']
       },
       include: [{ model: Departamentos, as: 'idDepartamentos' }]
-    })
-    res.json(ciudades)
+    })    
+    if (city) {
+      res.json({ message: 'Search succes', city })
+    } else {
+      res.status(404).json({ message: 'City no found', city: [] })
+    }
   } catch (error) {
-    res.json(error)
+    res.status(500).json({message: error.message, error})
   }
 }
 
@@ -79,7 +83,7 @@ export async function deleteCiudad(req, res) {
       counts: deleteRowCount
     })
   } catch (error) {
-    res.status(500).json({error, message: error})
+    res.status(500).json({ error, message: error })
   }
 }
 

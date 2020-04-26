@@ -11,6 +11,7 @@ import girosRoutes from './routes/giros'
 import perfilesRoutes from './routes/perfiles'
 import usuariosRoutes from './routes/usuarios'
 import permisosRoutes from './routes/permisos'
+import loginRoutes from './routes/login'
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/giros", girosRoutes)
 app.use("/api/perfiles", perfilesRoutes)
 app.use("/api/usuarios", usuariosRoutes)
 app.use("/api/permisos", permisosRoutes)
+app.use("/api/login", loginRoutes)
 //public
 app.use(express.static(path.join(__dirname, 'public')))
 
