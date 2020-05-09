@@ -18,7 +18,7 @@ export async function getGiros(req, res) {
     })
     res.json({ giros })
   } catch (error) {
-    res.json(error)
+    res.status(500).json({error})
   }
 }
 

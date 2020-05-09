@@ -1,11 +1,10 @@
 import Sequelize from 'sequelize'
-
 export const sequelize = new Sequelize(
   'palmigirosnode',
   'root',
-  'carlos',
+  process.env.PASS_DB, /* contraseñaDb from variable de entorno */
   {
-    host: 'localhost',
+    host: process.env.HOST_DB, /* hostDB from variable de entorno */
     dialect: 'mysql',
     pool:{
       max: 5,

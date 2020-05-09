@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { createDepartamento, getDepartamentos, getOneDepartamento, deleteDepartamento, updateDepartamento } from '../controller/departamentos.controller'
+import { isAuthenticated } from '../auth/auth'
 
 const router = Router()
 
