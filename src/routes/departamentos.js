@@ -1,16 +1,13 @@
 import { Router } from 'express'
 import { createDepartamento, getDepartamentos, getOneDepartamento, deleteDepartamento, updateDepartamento } from '../controller/departamentos.controller'
-import { isAuthenticated } from '../auth/auth'
+import { havePermissions } from '../auth/auth'
 
 const router = Router()
 
-router.get('/', getDepartamentos)
-router.get('/:id', getOneDepartamento)
-
-router.post('/', createDepartamento)
-
-router.delete('/:id', deleteDepartamento)
-
-router.put('/:id', updateDepartamento)
+router.get('/', havePermissions(1), getDepartamentos)
+router.get('/:id', havePermissions(1), getOneDepartamento)
+router.post('/', havePermissions(2), createDepartamento)
+router.delete('/:id', havePermissions(4), deleteDepartamento)
+router.put('/:id', havePermissions(3), updateDepartamento)
 
 export default router

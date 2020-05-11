@@ -17,7 +17,7 @@ import perfilesRoutes from './routes/perfiles'
 import usuariosRoutes from './routes/usuarios'
 import permisosRoutes from './routes/permisos'
 import loginRoutes from './routes/login'
-import authRouter from './routes/auth'
+import {dataSessionUser} from './auth/auth'
 
 const app = express();
 
@@ -58,7 +58,7 @@ app.use("/api/perfiles", isAuthenticated, perfilesRoutes)
 app.use("/api/usuarios", isAuthenticated, usuariosRoutes)
 app.use("/api/permisos", isAuthenticated, permisosRoutes)
 app.use("/api/login", loginRoutes) //Loguear
-app.use("/api/auth", authRouter) //Retornar datos de session si la hay
+app.use("/api/auth", dataSessionUser) //Retornar datos de session si la hay
 //public
 app.use(express.static(path.join(__dirname, 'public')))
 

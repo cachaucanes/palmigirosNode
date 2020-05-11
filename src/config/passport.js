@@ -34,7 +34,7 @@ passport.use(new Strategy({
 
 passport.serializeUser((user, done) => {
   const {id, nombres,apellidos, idPerfiles} = user
-  const userSession = Object.assign({id, nombres, apellidos, idPerfiles})
+  const userSession = Object.assign({id, nombres, apellidos, idPerfiles})    
   done(null, userSession)
 })
 

@@ -1,11 +1,8 @@
 import Usuarios from '../models/usuarios'
 import passport from 'passport'
 
-
 export async function login(req, res, next) {
   passport.authenticate('local', (err, user, info) => {
-    console.log(info);
-
     if (err) {
       return res.json(info)
     }
@@ -25,10 +22,10 @@ export async function login(req, res, next) {
 }
 
 export async function logout(req, res) {
-  console.log("entro aqui");    
+  console.log("entro aqui");
   /* req.logOut(); */
   req.logout()
   /* req.session.destroy() */
-  console.log("Termino Session",req.session);
-  res.status(200).json({message: 'Logout success'})
+  console.log("Termino Session", req.session);
+  res.status(200).json({ message: 'Logout success' })
 }
