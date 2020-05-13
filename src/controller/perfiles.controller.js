@@ -99,8 +99,56 @@ export async function updatePerfil(req, res) {
 //PerfilesHasPermisos (BelongsToMany)
 export async function postPermisos(req, res) {
   try {
-    const { idPerfil, idPermiso } = req.body        
+    const { idPerfil, permisos } = req.body
+    let permisosAdd = []
+
     const perfil = await Perfiles.findOne({
+      where: { id: idPerfil }
+    })
+    if (!perfil) {
+      res.json({ message: 'Perfil not found' })
+      return 0
+    }
+
+    if (permisos.length > 0) {
+      permisos.map(async permiso => {
+        const permisoFind = await Permisos.findOne({
+          where: { id: permiso.id }
+        })
+        if (permisoFind) {
+          try {
+            const permisoAdd = await perfil.addPermisos(permisoFind)
+            if (permisoAdd) {
+              permisosAdd.push(permiso.id)
+              if (permisosAdd.length === permisos.length) {
+
+                const dateUpdatePerfil = await Perfiles.findOne({
+                  where: { id: idPerfil },
+                  include: [{ model: Permisos }]
+                })
+                res.json({ perfil: dateUpdatePerfil, message: `${permisosAdd.length} ${permisosAdd.length > 1 ? 'Permisos' : 'Permiso'} agregados al perfil` })
+              }
+            } else {
+              if (permisosAdd.length === permisos.length) {
+                const dateUpdatePerfil = await Perfiles.findOne({
+                  where: { id: idPerfil },
+                  include: [{ model: Permisos }]
+                })
+                res.json({ perfil: dateUpdatePerfil, message: `${permisosAdd.length} ${permisosAdd.length > 1 ? 'Permisos' : 'Permiso'} agregados al perfil` })
+              }
+            }
+
+          } catch (error) {
+            res.json(error)
+          }
+        } else {
+          res.json({ message: 'Permiso not found' })
+        }
+      })
+    }
+
+
+    /* const perfil = await Perfiles.findOne({
       where: { id: idPerfil }
     })
     if (!perfil) {
@@ -115,7 +163,7 @@ export async function postPermisos(req, res) {
       res.json({ message: "Permisos agregados al perfil", permisosAdd })
     } else {
       res.json({ message: 'Permiso not found' })
-    }
+    } */
 
   } catch (error) {
     res.json(error)
