@@ -10,8 +10,7 @@ router.delete('/:idPerfiles', havePermissions(24), deletePerfil)
 router.put('/:idPerfil', havePermissions(23), updatePerfil)
 /* Add or Delete permisos al perfil */
 router.post('/add', havePermissions(25),  postPermisos)
-router.delete('/delete/:idPerfil/:idPermiso', deletePermisos)
-
-
+/* router.delete('/delete/:idPerfil/:idPermiso', deletePermisos) */
+router.post('/delete/permisos',havePermissions(26), deletePermisos)
 
 export default router

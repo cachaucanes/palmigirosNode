@@ -36,8 +36,7 @@ export const havePermissions = (permiso) => async (req, res, next) => {
       return next()
     }
     else {
-      console.log("Entro aqui permiss");
-      
+      console.log("Unauthorized, Permission not found");      
       res.status(404).json({ message: 'Unauthorized, Permission not found' })
     }
   } catch (error) {

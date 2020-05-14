@@ -2,6 +2,11 @@ import Usuarios from '../models/usuarios'
 import passport from 'passport'
 
 export async function login(req, res, next) {
+  const {email, password} = req.body
+  if(!email || !password){
+    return res.status(404).json({message: "Ingrese email y password"})
+  }
+  
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       return res.json(info)

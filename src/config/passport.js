@@ -21,11 +21,11 @@ passport.use(new Strategy({
         const userSession = Object.assign({id, nombres, apellidos, idPerfiles})
         return done(null, user, { message: 'Success Login', user: userSession })
       } else {
-        return done(null, null, { message: 'Not match pass' })
+        return done(null, null, { message: 'Contraseña incorrecta' })
       }
     }
     else {
-      return done(null, null, { message: 'user not found' })
+      return done(null, null, { message: 'El usuario no existe' })
     }
   } catch (error) {
     return done(error, null)

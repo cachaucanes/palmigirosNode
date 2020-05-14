@@ -101,7 +101,6 @@ export async function postPermisos(req, res) {
   try {
     const { idPerfil, permisos } = req.body
     let permisosAdd = []
-
     const perfil = await Perfiles.findOne({
       where: { id: idPerfil }
     })
@@ -109,7 +108,6 @@ export async function postPermisos(req, res) {
       res.json({ message: 'Perfil not found' })
       return 0
     }
-
     if (permisos.length > 0) {
       permisos.map(async permiso => {
         const permisoFind = await Permisos.findOne({
@@ -137,7 +135,6 @@ export async function postPermisos(req, res) {
                 res.json({ perfil: dateUpdatePerfil, message: `${permisosAdd.length} ${permisosAdd.length > 1 ? 'Permisos' : 'Permiso'} agregados al perfil` })
               }
             }
-
           } catch (error) {
             res.json(error)
           }
@@ -146,48 +143,49 @@ export async function postPermisos(req, res) {
         }
       })
     }
-
-
-    /* const perfil = await Perfiles.findOne({
-      where: { id: idPerfil }
-    })
-    if (!perfil) {
-      res.json({ message: 'Perfil not found' })
-      return 0
-    }
-    const permiso = await Permisos.findOne({
-      where: { id: idPermiso }
-    })
-    if (permiso) {
-      const permisosAdd = await perfil.addPermisos(permiso)
-      res.json({ message: "Permisos agregados al perfil", permisosAdd })
-    } else {
-      res.json({ message: 'Permiso not found' })
-    } */
-
   } catch (error) {
     res.json(error)
   }
 }
 
 export async function deletePermisos(req, res) {
-  //Para enviar con metodo post
-  /* const {idPerfil, idPermiso} = req.body */
-  try {
-    //por metodo Delete
-    const { idPerfil, idPermiso } = req.params
 
+  //Para enviar con metodo post
+  const { idPerfil, permisos } = req.body
+  let permisosDeleted = []
+  try {
     const perfil = await Perfiles.findOne({
       where: { id: idPerfil }
     })
-
     if (perfil) {
-      await perfil.removePermisos(idPermiso)
-      res.json({ message: 'Permiso removido' })
+      permisos.map(async permiso => {
+        try {
+          const permisoRemoved = await perfil.removePermisos(permiso.id)
+          if (permisoRemoved) {
+            permisosDeleted.push(permiso.id)
+            if (permisosDeleted.length === permisos.length) {
+              const permisosUpdate = await Perfiles.findOne({
+                where: { id: idPerfil },
+                include: [{ model: Permisos }]
+              })
+              res.json({ perfil: permisosUpdate, message: `${permisosDeleted.length} ${permisosDeleted.length > 1 ? 'Permisos Eliminados' : 'Permiso eliminado'}` })
+            }
+          } else {
+            if (permisosDeleted.length === permisos.length) {
+              const permisosUpdate = await Perfiles.findOne({
+                where: { id: idPerfil },
+                include: [{ model: Permisos }]
+              })
+              res.json({ perfil: permisosUpdate, message: `${permisosDeleted.length} ${permisosDeleted.length > 1 ? 'Permisos Eliminados' : 'Permiso eliminado'}` })
+            }
+          }
+        } catch (error) {
+          res.json(error)
+        }
+      })
     } else {
       res.status(404).json({ message: 'Perfil not found' })
     }
-
   } catch (error) {
     res.json(error)
   }
