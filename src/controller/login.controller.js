@@ -16,7 +16,7 @@ export async function login(req, res, next) {
     }
     req.logIn(user, (err) => {
       if (!err) {
-        console.log("Infooo", info, req.session.passport.user);
+        console.log("Login controller", info, req.session.passport.user);
         return res.status(200).json(info)
       } else {
         return res.json(info)

@@ -1,5 +1,6 @@
 import Perfiles from '../models/perfiles'
 import Permisos from '../models/permisos'
+import Usuarios from '../models/usuarios'
 
 export async function getPerfiles(req, res) {
   try {
@@ -49,14 +50,27 @@ export async function createPerfil(req, res) {
 export async function deletePerfil(req, res) {
   try {
     const { idPerfiles } = req.params
-    const deleteRows = await Perfiles.destroy({
-      where: { id: idPerfiles }
+
+
+    const usersWithProfile = await Usuarios.findAll({
+      where: { idPerfiles }
     })
-    if (!deleteRows) {
-      res.status(404).json({ message: 'Not Found' })
-      return 0
+    /* console.log(usuariosWithPerfil.length, usuariosWithPerfil); */
+    if (usersWithProfile.length > 0) {
+      res.status(404).json({
+        message: `Este perfil tiene ${usersWithProfile.length} ${usersWithProfile.length > 1 ? 'usuarios asociados' : 'usuario asociado'}`
+      })
     }
-    res.json({ message: 'Perfil deleted', rows: deleteRows })
+    else {
+      const deleteRows = await Perfiles.destroy({
+        where: { id: idPerfiles }
+      })
+      if (!deleteRows) {
+        res.status(404).json({ message: 'Not Found' })
+        return 0
+      }
+      res.json({ message: 'Perfil deleted', rows: deleteRows })
+    }
   } catch (error) {
     res.status(500).json(error)
   }

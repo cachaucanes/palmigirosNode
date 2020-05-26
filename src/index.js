@@ -58,7 +58,7 @@ app.use("/api/perfiles", isAuthenticated, perfilesRoutes)
 app.use("/api/usuarios", isAuthenticated, usuariosRoutes)
 app.use("/api/permisos", isAuthenticated, permisosRoutes)
 app.use("/api/login", loginRoutes) //Loguear
-app.use("/api/auth", dataSessionUser) //Retornar datos de session si la hay
+app.use("/api/auth", dataSessionUser) //Retornar datos de session si la hay (verifica antes isAuthenticated)
 //public
 app.use(express.static(path.join(__dirname, 'public')))
 
